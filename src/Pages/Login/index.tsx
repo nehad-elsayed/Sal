@@ -13,24 +13,25 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Github, User, Mail, Lock, Briefcase } from "lucide-react";
+import { Github, Mail, Lock } from "lucide-react";
+
+
+// fo login on testing const test ={
+//   username: "nehad999",
+//   password: "12345678",
+// }
+
+
 
 // Validation schemas
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  username: z.string().min(6, "Username must be at least 6 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const signupSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  jobTitle: z.string().min(2, "Job title must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+
 
 type LoginFormValues = z.infer<typeof loginSchema>;
-type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,21 +44,11 @@ export default function Login() {
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
-  const signupForm = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      email: "",
-      password: "",
-    },
-  });
 
   const handleTabChange = (tab: string) => {
     setSearchParams({ tab });
@@ -67,9 +58,7 @@ export default function Login() {
     console.log("Login form submitted:", values);
   };
 
-  const onSignupSubmit = (values: SignupFormValues) => {
-    console.log("Signup form submitted:", values);
-  };
+
 
   // Handle navigation between login and signup
   const handleSignInClick = () => {
@@ -79,6 +68,7 @@ export default function Login() {
   const handleSignUpClick = () => {
     navigate("/signup?tab=signup");
   };
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -128,16 +118,16 @@ export default function Login() {
                       {/* Email */}
                       <FormField
                         control={loginForm.control}
-                        name="email"
+                        name="username"
                         render={({ field }) => (
                           <FormItem>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                               <FormControl>
                                 <Input
-                                  type="email"
-                                  placeholder="E-mail"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  type="username"
+                                  placeholder="username"
+                                  className="pl-10 h-12 border-gray-200 rounded-full focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />
                               </FormControl>
@@ -159,7 +149,7 @@ export default function Login() {
                                 <Input
                                   type="password"
                                   placeholder="password"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  className="pl-10 h-12 border-gray-200 rounded-full focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />
                               </FormControl>
@@ -172,7 +162,7 @@ export default function Login() {
                       {/* Sign In Button */}
                       <Button
                         type="submit"
-                        className="w-full h-12 text-base font-medium"
+                        className="w-full h-12 text-base font-medium rounded-full"
                       >
                         Sign in
                       </Button>
@@ -193,7 +183,7 @@ export default function Login() {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full h-12 text-base font-medium bg-black text-white hover:bg-gray-800 border-black"
+                        className="w-full h-12  font-medium bg-black text-white hover:text-white hover:bg-gray-700 rounded-full border-black"
                       >
                         <Github className="w-5 h-5 mr-2" />
                         Sign in with GitHub
@@ -202,154 +192,7 @@ export default function Login() {
                   </Form>
                 </TabsContent>
 
-                <TabsContent value="signup" className="mt-6">
-                  <Form {...signupForm}>
-                    <form
-                      onSubmit={signupForm.handleSubmit(onSignupSubmit)}
-                      className="space-y-4"
-                    >
-                      {/* Name Fields */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={signupForm.control}
-                          name="firstName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    placeholder="First name"
-                                    className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                    {...field}
-                                  />
-                                </FormControl>
-                              </div>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={signupForm.control}
-                          name="lastName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                    {...field}
-                                  />
-                                </FormControl>
-                              </div>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      {/* Job Title */}
-                      <FormField
-                        control={signupForm.control}
-                        name="jobTitle"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="relative">
-                              <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  placeholder="Job title"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Email */}
-                      <FormField
-                        control={signupForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <FormControl>
-                                <Input
-                                  type="email"
-                                  placeholder="E-mail"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Password */}
-                      <FormField
-                        control={signupForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  placeholder="password"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Sign Up Button */}
-                      <Button
-                        type="submit"
-                        className="w-full h-12 text-base font-medium"
-                      >
-                        Sign up
-                      </Button>
-
-                      {/* Divider */}
-                      <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-gray-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                          <span className="px-2 bg-blue-50 text-gray-500">
-                            Or
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* GitHub Button */}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full h-12 text-base font-medium bg-black text-white hover:bg-gray-800 border-black"
-                      >
-                        <Github className="w-5 h-5 mr-2" />
-                        Sign in with GitHub
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
+           
               </Tabs>
             </div>
           </div>
