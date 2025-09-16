@@ -1,0 +1,29 @@
+import axiosInstance from "@/api";
+import { AuthContext } from "@/components/Contexts/AuthContext";
+import type { LoginResponse, RegisterData } from "@/types/backend";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+
+function register( registerData: RegisterData) {
+  return axiosInstance.post<LoginResponse>("/register", registerData);
+}
+
+export default function useRegister() {
+  const { onLogin } = useContext(AuthContext) as {
+    onLogin: (token: string) => void;
+  };
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: ["register"],
+    mutationFn: register,
+    onSuccess: (data) => {
+      onLogin(data.data.token);
+      console.log(data.data.token);
+      navigate("/");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+}

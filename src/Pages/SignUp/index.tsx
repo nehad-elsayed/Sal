@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -13,14 +13,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Github, User, Mail, Lock, Briefcase } from "lucide-react";
-
-
+import { Github, User, Mail, Lock} from "lucide-react";
+import useRegister from "@/hooks/useRegister";
 
 const signupSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  jobTitle: z.string().min(2, "Job title must be at least 2 characters"),
+  first_name: z.string().min(2, "First name must be at least 2 characters"),
+  last_name: z.string().min(2, "Last name must be at least 2 characters"),
+  username: z.string().min(2, "Username must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
@@ -30,18 +29,17 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export default function SignUp() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { mutate: signup, isPending } = useRegister();
 
   // Get current tab from URL, default to 'signup'
   const currentTab = searchParams.get("tab") || "signup";
 
-
-
   const signupForm = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
+      first_name: "",
+      last_name: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -51,10 +49,9 @@ export default function SignUp() {
     setSearchParams({ tab });
   };
 
-
-
-  const onSignupSubmit = (values: SignupFormValues) => {
+  const onSignupSubmit: SubmitHandler<SignupFormValues> = (values) => {
     console.log("Signup form submitted:", values);
+    signup(values);
   };
 
   // Handle navigation between login and signup
@@ -105,19 +102,19 @@ export default function SignUp() {
                   </TabsTrigger>
                 </TabsList>
 
-          
-
                 <TabsContent value="signup" className="mt-6">
                   <Form {...signupForm}>
                     <form
-                      onSubmit={signupForm.handleSubmit(onSignupSubmit)}
+                      onSubmit={signupForm.handleSubmit(
+                        onSignupSubmit as SubmitHandler<SignupFormValues>
+                      )}
                       className="space-y-4"
                     >
                       {/* Name Fields */}
                       <div className="grid grid-cols-2 gap-4">
                         <FormField
                           control={signupForm.control}
-                          name="firstName"
+                          name="first_name"
                           render={({ field }) => (
                             <FormItem>
                               <div className="relative">
@@ -126,7 +123,7 @@ export default function SignUp() {
                                   <Input
                                     type="text"
                                     placeholder="First name"
-                                    className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                    className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                     {...field}
                                   />
                                 </FormControl>
@@ -137,7 +134,7 @@ export default function SignUp() {
                         />
                         <FormField
                           control={signupForm.control}
-                          name="lastName"
+                          name="last_name"
                           render={({ field }) => (
                             <FormItem>
                               <div className="relative">
@@ -146,7 +143,7 @@ export default function SignUp() {
                                   <Input
                                     type="text"
                                     placeholder="Last Name"
-                                    className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                    className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                     {...field}
                                   />
                                 </FormControl>
@@ -157,19 +154,19 @@ export default function SignUp() {
                         />
                       </div>
 
-                      {/* Job Title */}
+                      {/* Username */}
                       <FormField
                         control={signupForm.control}
-                        name="jobTitle"
+                        name="username"
                         render={({ field }) => (
                           <FormItem>
                             <div className="relative">
-                              <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                               <FormControl>
                                 <Input
                                   type="text"
-                                  placeholder="Job title"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  placeholder="Username"
+                                  className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />
                               </FormControl>
@@ -191,7 +188,7 @@ export default function SignUp() {
                                 <Input
                                   type="email"
                                   placeholder="E-mail"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />
                               </FormControl>
@@ -213,7 +210,7 @@ export default function SignUp() {
                                 <Input
                                   type="password"
                                   placeholder="password"
-                                  className="pl-10 h-12 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />
                               </FormControl>
@@ -226,9 +223,9 @@ export default function SignUp() {
                       {/* Sign Up Button */}
                       <Button
                         type="submit"
-                        className="w-full h-12 text-base font-medium"
+                        className="w-full rounded-full h-12 text-base font-medium"
                       >
-                        Sign up
+                        {isPending ? "Signing up..." : "Sign up"}
                       </Button>
 
                       {/* Divider */}
@@ -247,10 +244,10 @@ export default function SignUp() {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full h-12 text-base font-medium bg-black text-white hover:bg-gray-800 border-black"
+                        className="w-full rounded-full h-12 text-base font-medium bg-black text-white hover:text-white hover:bg-gray-700 border-black"
                       >
                         <Github className="w-5 h-5 mr-2" />
-                        Sign in with GitHub
+                        Sign up with GitHub
                       </Button>
                     </form>
                   </Form>

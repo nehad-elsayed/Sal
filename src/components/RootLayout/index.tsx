@@ -4,7 +4,7 @@ export default function RootLayout() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen container ">
+      <div className="min-h-screen container mt-4 ">
         <Outlet />
       </div>
     </>

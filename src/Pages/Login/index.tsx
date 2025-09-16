@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Github, Mail, Lock } from "lucide-react";
+import useLogin from "@/hooks/useLogin";
 
 
 // fo login on testing const test ={
@@ -36,6 +37,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+ const {mutate: login,isPending} = useLogin()
 
   // Get current tab from URL, default to 'login'
   const currentTab = searchParams.get("tab") || "login";
@@ -47,6 +49,7 @@ export default function Login() {
       username: "",
       password: "",
     },
+  
   });
 
 
@@ -56,6 +59,7 @@ export default function Login() {
 
   const onLoginSubmit = (values: LoginFormValues) => {
     console.log("Login form submitted:", values);
+    login(values);
   };
 
 
@@ -112,7 +116,7 @@ export default function Login() {
                 <TabsContent value="login" className="mt-6">
                   <Form {...loginForm}>
                     <form
-                      onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                      onSubmit={loginForm.handleSubmit(onLoginSubmit as SubmitHandler<LoginFormValues>)}
                       className="space-y-4"
                     >
                       {/* Email */}
@@ -164,7 +168,7 @@ export default function Login() {
                         type="submit"
                         className="w-full h-12 text-base font-medium rounded-full"
                       >
-                        Sign in
+                        {isPending ? "Signing in..." : "Sign in"}
                       </Button>
 
                       {/* Divider */}
