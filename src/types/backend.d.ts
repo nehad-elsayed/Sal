@@ -8,6 +8,8 @@ export interface RegisterData {
   username: string;
   email: string;
   password: string;
+  phone: string;
+  job: string;
 }
 
 export interface LoginResponse {
@@ -24,7 +26,34 @@ export interface User {
   job: string;
   full_name: string;
   created_at: string;
-  user_name: string;
+  username: string;
   phone: string;
+  questions_count:number;
   id: number;
+  answers_count:number;
+  questions?: Question[];
+}
+
+export interface Question{
+  accepted_answer: string | null
+  answers_count: number
+  content: string
+  created_at: string
+  downvotes: number
+  id: number
+  upvotes: number
+  user: User
+  viewer_vote: string | null
+}
+export interface Notifications {
+  data: string[]
+  meta: Meta
+  success: boolean
+  unread_count: number
+}
+
+export interface Meta {
+  current_page: number
+  per_page: number
+  total: number
 }

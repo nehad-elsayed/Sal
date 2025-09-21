@@ -58,7 +58,6 @@ export default function Login() {
   };
 
   const onLoginSubmit = (values: LoginFormValues) => {
-    console.log("Login form submitted:", values);
     login(values);
   };
 

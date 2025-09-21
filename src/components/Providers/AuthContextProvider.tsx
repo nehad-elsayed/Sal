@@ -15,7 +15,7 @@ export default function AuthContextProvider({
 }) {
   const [token, setToken] = useState<string | null>(getLocalStorageToken());
   const [isAuth, setIsAuth] = useState<boolean>(!!token);
-
+  const [isInitialized, setIsInitialized] = useState<boolean>(false); //3shan elloding elly by7sal bssb elprotected routes
   //instead of using it more than one time i can use this function
   function setAxiosToken(token: string | undefined) {
     return (axiosInstance.defaults.headers.common[
@@ -43,12 +43,14 @@ export default function AuthContextProvider({
     if (LocalStorageToken) {
       setToken(LocalStorageToken);
       setIsAuth(true);
+      setAxiosToken(LocalStorageToken); // إضافة الـ token إلى axios
     }
+    setIsInitialized(true);
   }, []);
 
   return (
     <AuthContext.Provider value={{ isAuth, onLogin, onLogout }}>
-      {children}
+      {isInitialized && children}
     </AuthContext.Provider>
   );
 }

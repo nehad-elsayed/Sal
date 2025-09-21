@@ -4,8 +4,9 @@ import type { LoginResponse, RegisterData } from "@/types/backend";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import toast from "react-hot-toast";
 
-function register( registerData: RegisterData) {
+function register(registerData: RegisterData) {
   return axiosInstance.post<LoginResponse>("/register", registerData);
 }
 
@@ -19,11 +20,9 @@ export default function useRegister() {
     mutationFn: register,
     onSuccess: (data) => {
       onLogin(data.data.token);
-      console.log(data.data.token);
+      toast.success("Registered successfully");
       navigate("/");
     },
-    onError: (error) => {
-      console.log(error);
-    },
+  
   });
 }

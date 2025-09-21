@@ -10,17 +10,22 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
+// import defaultAvatarImg from "../../assets/images/avatar.avif";
+import useLogout from "@/hooks/useLogout";
+import useNotifications from "@/hooks/useNotifications";
+import useProfile from "@/hooks/useProfile";
 
 export default function Navbar() {
-  const { isAuth, onLogout } = useContext(AuthContext) as {
-    isAuth: boolean;
-    onLogout: () => void;
-  };
+  const { isAuth } = useContext(AuthContext) as {isAuth: boolean;};
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  const { data: profileData } = useProfile();
+  const { mutate: logoutData } = useLogout();
+  const { data: notifications } = useNotifications();
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // Add search functionality here
@@ -36,6 +41,12 @@ export default function Navbar() {
       ) {
         setIsDropdownOpen(false);
       }
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
+        setIsNotificationsOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -46,6 +57,10 @@ export default function Navbar() {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
   };
 
   return (
@@ -91,22 +106,91 @@ export default function Navbar() {
                   <Home className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
 
-                <button
-                  className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200 relative"
-                  title="Notifications"
-                >
-                  <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
-                  {/* Notification badge */}
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center ">
-                    3
-                  </span>
-                </button>
+                <div className="relative" ref={notificationsRef}>
+                  <button
+                    className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200 relative"
+                    title="Notifications"
+                    onClick={toggleNotifications}
+                  >
+                    <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
+                    {/* Notification badge */}
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center ">
+                      {notifications?.unread_count || 0}
+                    </span>
+                  </button>
+
+                  {/* Notifications Dropdown */}
+                  {isNotificationsOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          Notifications
+                        </h3>
+                      </div>
+                      <div className="py-2">
+                        {notifications?.data &&
+                        notifications.data.length > 0 ? (
+                          notifications.data.map(
+                            (notification: {
+                              id: string;
+                              title?: string;
+                              message?: string;
+                              body?: string;
+                              created_at?: string;
+                            }) => (
+                              <div
+                                key={notification.id}
+                                className="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                              >
+                                <div className="flex items-start space-x-3">
+                                  <div className="flex-shrink-0">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {notification.title || "New Notification"}
+                                    </p>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                      {notification.message ||
+                                        notification.body ||
+                                        "You have a new notification"}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                      {notification.created_at
+                                        ? new Date(
+                                            notification.created_at
+                                          ).toLocaleDateString()
+                                        : "Just now"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          )
+                        ) : (
+                          <div className="px-4 py-8 text-center text-gray-500">
+                            <Bell className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                            <p>No notifications yet</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <button
                   className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200"
-                  title="Help"
+                  title="open app on github"
                 >
-                  <HelpCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <HelpCircle
+                    className="w-5 h-5 sm:w-6 sm:h-6"
+                    onClick={() =>
+                      window.open(
+                        "https://github.com/nehad-elsayed/Sal",
+                        "_blank"
+                      )
+                    }
+                  />
                 </button>
               </div>
 
@@ -121,8 +205,8 @@ export default function Navbar() {
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center overflow-hidden">
                       {/* You can replace this with an actual user image */}
                       <img
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-                        alt="User Avatar"
+                        src={profileData?.full_name }
+                        alt={profileData?.full_name || "user avatar"}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           // Fallback to icon if image fails to load
@@ -164,7 +248,7 @@ export default function Navbar() {
                       <div className="border-t border-gray-100 py-1">
                         <button
                           onClick={() => {
-                            onLogout();
+                            logoutData();
                             setIsDropdownOpen(false);
                             navigate("/login");
                           }}

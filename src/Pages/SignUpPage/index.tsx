@@ -13,7 +13,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Github, User, Mail, Lock} from "lucide-react";
+import { Github, User, Mail, Lock, Phone, Briefcase } from "lucide-react";
 import useRegister from "@/hooks/useRegister";
 
 const signupSchema = z.object({
@@ -22,6 +22,8 @@ const signupSchema = z.object({
   username: z.string().min(2, "Username must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  job: z.string().min(2, "Job title must be at least 2 characters"),
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -42,6 +44,8 @@ export default function SignUp() {
       username: "",
       email: "",
       password: "",
+      phone: "",
+      job: "",
     },
   });
 
@@ -50,7 +54,6 @@ export default function SignUp() {
   };
 
   const onSignupSubmit: SubmitHandler<SignupFormValues> = (values) => {
-    console.log("Signup form submitted:", values);
     signup(values);
   };
 
@@ -188,6 +191,50 @@ export default function SignUp() {
                                 <Input
                                   type="email"
                                   placeholder="E-mail"
+                                  className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Phone */}
+                      <FormField
+                        control={signupForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                              <FormControl>
+                                <Input
+                                  type="tel"
+                                  placeholder="Phone Number"
+                                  className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                  {...field}
+                                />
+                              </FormControl>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Job */}
+                      <FormField
+                        control={signupForm.control}
+                        name="job"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="relative">
+                              <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  placeholder="Job Title"
                                   className="rounded-full pl-10 h-12 border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                   {...field}
                                 />

@@ -8,5 +8,5 @@ export default function ProtectedRoutes({
   children: React.ReactNode;
 }) {
   const { isAuth } = useContext(AuthContext) as { isAuth: boolean };
-  return <>{isAuth ? children : <Navigate to="/login" />}</>;
+  return <>{isAuth ? children : <Navigate to="/login" replace />}</>;
 }
