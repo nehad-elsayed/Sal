@@ -25,6 +25,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-// axiosInstance.interceptors.request.use((response)=>response.data); => // السطر ده عشان احدد الداتا اللي راجعه م الباك اند عشان مثلا لو مش مستخدمه يوز كويري وعامله سيليكت م الريسبونس
+// axiosInstance.interceptors.request.use((response)=>response.data); // السطر ده عشان احدد الداتا اللي راجعه م الباك اند عشان مثلا لو مش مستخدمه يوز كويري وعامله سيليكت م الريسبونس
 
 export default axiosInstance;

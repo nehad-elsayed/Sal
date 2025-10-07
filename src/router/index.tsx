@@ -1,15 +1,18 @@
-import RootLayout from "@/components/RootLayout";
-import Login from "@/Pages/LoginPage";
 import SignUp from "@/Pages/SignUpPage";
 
 import { Suspense } from "react";
 import type { RouteObject } from "react-router-dom";
 import LoadingLogo from "@/components/LoadingLogo";
 import { createBrowserRouter } from "react-router-dom";
-import Home from "@/Pages/Home";
+import HomePage from "@/Pages/Home";
 import ProtectedAuthRoutes from "@/guards/ProtectedAuthRoutes";
 import ProtectedRoutes from "@/guards/ProtectedRoutes";
-import UserProfile from "@/Pages/UserProfile";
+import UserProfilePage from "@/Pages/UserProfile";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorFallback from "@/components/ErrorBoundary/ErrorFallback";
+import RootLayout from "@/components/RootLayout";
+import Login from "@/Pages/LoginPage";
+ 
 const routes: RouteObject[] = [
   {
     path: "/",
@@ -18,33 +21,41 @@ const routes: RouteObject[] = [
       {
         index: true,
         element: (
-          <ProtectedRoutes>
-            <Home />
-          </ProtectedRoutes>
+          <ErrorBoundary fallback={<ErrorFallback />} >
+            <ProtectedRoutes>
+              <HomePage />
+            </ProtectedRoutes>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/profile",
         element: (
-          <ProtectedRoutes>
-            <UserProfile />
-          </ProtectedRoutes>
+          <ErrorBoundary fallback={<ErrorFallback />} >
+            <ProtectedRoutes>
+              <UserProfilePage />
+            </ProtectedRoutes>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/login",
         element: (
-          <ProtectedAuthRoutes>
-            <Login />
-          </ProtectedAuthRoutes>
+          <ErrorBoundary fallback={<ErrorFallback />} >
+            <ProtectedAuthRoutes>
+              <Login />
+            </ProtectedAuthRoutes>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/signup",
         element: (
-          <ProtectedAuthRoutes>
-            <SignUp />
-          </ProtectedAuthRoutes>
+          <ErrorBoundary fallback={<ErrorFallback />} >
+            <ProtectedAuthRoutes>
+              <SignUp />
+            </ProtectedAuthRoutes>
+          </ErrorBoundary>
         ),
       },
     ],

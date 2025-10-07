@@ -1,10 +1,18 @@
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { defineConfig } from "vite";
 
-// https://vite.dev/config/
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import { lingui } from "@lingui/vite-plugin";
+import path from "path";
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      plugins: [["@lingui/swc-plugin", {}]],
+    }),
+    lingui(),
+    // svgr(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

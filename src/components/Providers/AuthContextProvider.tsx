@@ -1,4 +1,3 @@
-import axiosInstance from "@/api";
 import {
   getLocalStorageToken,
   removeLocalStorageToken,
@@ -6,6 +5,7 @@ import {
 } from "@/utils/LocalStorageToken";
 import { useEffect, useState } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
+import axiosInstance from "@/api";
 
 //bdal ma a3ml el provider m3 el create context f file wa7ed bfsl el provider
 export default function AuthContextProvider({

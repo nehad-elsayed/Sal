@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  Edit3,
-  ThumbsUp,
-  ThumbsDown,
-  MessageCircle,
-  MoreVertical,
-} from "lucide-react";
+import { Edit3, ThumbsUp, ThumbsDown, MessageCircle, MoreVertical } from "lucide-react";
 import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
 import axiosInstance from "@/api";
 
-export default function UserProfile() {
+export default function UserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const { data: profileData, isLoading, error } = useProfile();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -66,18 +60,6 @@ export default function UserProfile() {
     );
   }
 
-  if (!profileData) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <p className="text-gray-600">No profile data available</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,36 +75,56 @@ export default function UserProfile() {
               <span>Edit Profile</span>
             </button>
           </div>
+          {/* Avatar  */}
+          <div className="w-24 h-24 mx-auto my-2 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-white shadow-sm flex items-center justify-center">
+            {profileData?.avatar ? (
+              <img
+                src={profileData.avatar}
+                alt={profileData.full_name.charAt(0)}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Hide image and show initials if image fails to load
+                  e.currentTarget.style.display = "none";
+                  const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (nextElement) {
+                    nextElement.style.display = "flex";
+                  }
+                }}
+              />
+            ) : null}
+            <div
+              className={`w-full h-full flex items-center justify-center text-2xl font-bold text-blue-600 ${
+                profileData?.avatar ? "hidden" : "flex"
+              }`}
+              style={{ display: profileData?.avatar ? "none" : "flex" }}
+            >
+              {profileData?.full_name.substring(0, 2).toUpperCase()}
+            </div>
+          </div>
 
           {/* User Information */}
           <div className="text-center">
-            <p className="text-gray-500 text-sm mb-1">
-              @{profileData.username}
-            </p>
+            <p className="text-gray-500 text-sm mb-1">@{profileData?.username}</p>
             <h1 className="text-2xl font-bold text-gray-900 capitalize mb-2">
-              {profileData.full_name}
+              {profileData?.full_name}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">
-              {profileData.job || "No job available"}{" "}
-            </p>
+            <p className="text-gray-500 text-sm mb-4">{profileData?.job || "No job available"}</p>
 
             {/* Bio */}
             <p className="text-gray-600 text-sm leading-relaxed max-w-md mx-auto mb-6">
-              {profileData.bio || "hello i'm a Software Developer"}
+              {profileData?.bio || "hello i'm a Software Developer"}
             </p>
 
             {/* User Statistics */}
             <div className="flex justify-center space-x-8">
               <div className="text-center">
                 <p className="text-2xl font-bold text-primary">
-                  {profileData.questions_count || questions.length}
+                  {profileData?.questions_count || questions.length}
                 </p>
                 <p className="text-gray-500 text-sm">Questions</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-primary">
-                  {profileData.answers_count || 0}
-                </p>
+                <p className="text-2xl font-bold text-primary">{profileData?.answers_count || 0}</p>
                 <p className="text-gray-500 text-sm">Answers</p>
               </div>
             </div>
@@ -132,7 +134,7 @@ export default function UserProfile() {
         {/* Questions Section */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-primary mb-4">
-            Questions ({profileData.questions_count || questions.length})
+            Questions ({profileData?.questions_count || questions.length})
           </h2>
 
           {/* Questions List */}
@@ -188,9 +190,7 @@ export default function UserProfile() {
                         <div className="p-1 rounded-full group-hover/btn:bg-green-50">
                           <ThumbsUp className="w-4 h-4" />
                         </div>
-                        <span className="text-sm font-medium">
-                          {question.upvotes || 0}
-                        </span>
+                        <span className="text-sm font-medium">{question.upvotes || 0}</span>
                       </button>
 
                       {/* Downvotes */}
@@ -198,9 +198,7 @@ export default function UserProfile() {
                         <div className="p-1 rounded-full group-hover/btn:bg-red-50">
                           <ThumbsDown className="w-4 h-4" />
                         </div>
-                        <span className="text-sm font-medium">
-                          {question.downvotes || 0}
-                        </span>
+                        <span className="text-sm font-medium">{question.downvotes || 0}</span>
                       </button>
 
                       {/* Comments */}
@@ -208,9 +206,7 @@ export default function UserProfile() {
                         <div className="p-1 rounded-full group-hover/btn:bg-blue-50">
                           <MessageCircle className="w-4 h-4" />
                         </div>
-                        <span className="text-sm font-medium">
-                          {question.answers_count || 0}
-                        </span>
+                        <span className="text-sm font-medium">{question.answers_count || 0}</span>
                       </button>
                     </div>
 
@@ -218,14 +214,11 @@ export default function UserProfile() {
                     <div className="text-right">
                       <p className="text-gray-500 text-sm">
                         {question.created_at
-                          ? new Date(question.created_at).toLocaleDateString(
-                              "ar-EG",
-                              {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              }
-                            )
+                          ? new Date(question.created_at).toLocaleDateString("ar-EG", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
                           : "Recently"}
                       </p>
                     </div>
@@ -234,9 +227,7 @@ export default function UserProfile() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-gray-500 text-sm font-bold">
-              No questions yet
-            </div>
+            <div className="text-center text-gray-500 text-sm font-bold">No questions yet</div>
           )}
         </div>
       </div>
