@@ -29,7 +29,11 @@ export default function CreateQuestion() {
   });
 
   const onSubmit = (data: FormData) => {
+   if(data.content.trim()) {
     createQuestion(data);
+   } else {
+    toast.error("Question cannot be empty");
+   }
   };
   return (
     <>
