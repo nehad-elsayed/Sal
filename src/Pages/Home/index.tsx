@@ -1,23 +1,31 @@
-import { useState } from "react";
-import { Edit3, ThumbsUp, ThumbsDown, MessageCircle, MoreVertical } from "lucide-react";
+import { ThumbsUp, ThumbsDown, MessageCircle, MoreVertical, User } from "lucide-react";
 import useQuestions from "@/hooks/useQuestions";
 import type { Question } from "@/types/backend";
+import LoadingLogo from "@/components/LoadingLogo";
+import CreateQuestion from "@/components/CreateQuestion";
+import { useNavigate } from "react-router-dom";
 export default function HomePage() {
-  const [isEditing, setIsEditing] = useState(false);
-  const { data: questions } = useQuestions();
+  const navigate = useNavigate();
+  const { data: questions, isLoading } = useQuestions();
+  if (isLoading) {
+    return <LoadingLogo />;
+  }
 
+  console.log(questions?.data.length);
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <label htmlFor="create-question" className="text-primary font-semibold text-sm">*Create Question* </label>
+      <CreateQuestion />
       {/* Profile Header Card */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
         {/* Edit Profile Button */}
         <div className="flex justify-end mb-6">
           <button
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => navigate("/profile")}
             className="text-primary hover:text-blue-700 font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
           >
-            <Edit3 className="w-4 h-4" />
-            <span>Edit Profile</span>
+            <User className="w-4 h-4" />
+            <span>go to Profile</span>
           </button>
         </div>
 
@@ -39,15 +47,18 @@ export default function HomePage() {
                   <div className="flex items-start justify-between mb-4">
                     {/* Asker Info */}
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
-                        <img
-                          src={question.user.avatar}
-                          alt={question.user.full_name.charAt(0)}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="w-full h-full bg-gray-300 items-center justify-center text-gray-500 text-sm font-semibold hidden">
-                          {question.user.full_name?.charAt(0)}
-                        </div>
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        {question.user.avatar ? (
+                          <img
+                            src={question.user.avatar}
+                            alt={question.user.full_name.charAt(0)}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500 text-sm font-semibold">
+                            {question.user.full_name?.slice(0, 2).toUpperCase()}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <p className="font-medium text-gray-900 text-sm">

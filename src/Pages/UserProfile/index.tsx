@@ -27,25 +27,7 @@ export default function UserProfilePage() {
   }, [profileData?.id]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-            <div className="animate-pulse">
-              <div className="flex justify-center mb-6">
-                <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
-              </div>
-              <div className="text-center">
-                <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-2"></div>
-                <div className="h-6 bg-gray-300 rounded w-48 mx-auto mb-2"></div>
-                <div className="h-4 bg-gray-300 rounded w-40 mx-auto mb-4"></div>
-                <div className="h-4 bg-gray-300 rounded w-64 mx-auto"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+   return <ProfileSkeleton/>
   }
 
   if (error) {
@@ -108,11 +90,11 @@ export default function UserProfilePage() {
             <h1 className="text-2xl font-bold text-gray-900 capitalize mb-2">
               {profileData?.full_name}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">{profileData?.job || "No job available"}</p>
+            <p className="text-gray-500 text-sm mb-4">{profileData?.job ||"No job available"}</p>
 
             {/* Bio */}
             <p className="text-gray-600 text-sm leading-relaxed max-w-md mx-auto mb-6">
-              {profileData?.bio || "hello i'm a Software Developer"}
+              {profileData?.bio || "No bio available"}
             </p>
 
             {/* User Statistics */}
@@ -155,16 +137,16 @@ export default function UserProfilePage() {
                           alt={question.user.full_name.charAt(0)}
                           className="w-full h-full object-cover"
                         />
-                        <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-400 items-center justify-center text-white text-sm font-semibold hidden">
+                        <div className="w-full capitalize h-full bg-gradient-to-br from-blue-400 to-purple-400 items-center justify-center text-white text-sm font-semibold hidden">
                           {question.user.full_name?.charAt(0)}
                         </div>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">
+                        <p className="font-semibold text-gray-900 text-sm capitalize">
                           {question.user.full_name}
                         </p>
-                        <p className="text-gray-500 text-xs">
-                          {question.user.job || "frontend developer"}
+                        <p className="text-gray-500 text-xs capitalize">
+                          {question.user.job ? question.user.job : null}
                         </p>
                       </div>
                     </div>
@@ -229,6 +211,29 @@ export default function UserProfilePage() {
           ) : (
             <div className="text-center text-gray-500 text-sm font-bold">No questions yet</div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+function ProfileSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+          <div className="animate-pulse">
+            <div className="flex justify-center mb-6">
+              <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
+            </div>
+            <div className="text-center">
+              <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-2"></div>
+              <div className="h-6 bg-gray-300 rounded w-48 mx-auto mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded w-40 mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded w-64 mx-auto"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

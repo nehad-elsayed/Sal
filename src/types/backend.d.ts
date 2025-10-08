@@ -44,6 +44,7 @@ export interface Question{
   upvotes: number
   user: User
   viewer_vote: string | null
+ 
 }
 export interface Notifications {
   data: string[]
