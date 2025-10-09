@@ -58,3 +58,8 @@ export interface Meta {
   per_page: number
   total: number
 }
+
+
+export type QuestionFormData = {
+  content: string;
+};

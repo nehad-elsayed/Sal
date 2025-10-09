@@ -1,16 +1,29 @@
 import { useEffect, useState } from "react";
-import { Edit3, ThumbsUp, ThumbsDown, MessageCircle, MoreVertical } from "lucide-react";
+import {
+  Edit3,
+  ThumbsUp,
+  ThumbsDown,
+  MessageCircle,
+  MoreVertical,
+  ShieldCloseIcon,
+} from "lucide-react";
 import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
 import axiosInstance from "@/api";
+import UserInfoForm from "@/components/Forms/UserInfoForm";
 
 export default function UserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const { data: profileData, isLoading, error } = useProfile();
   const [questions, setQuestions] = useState<Question[]>([]);
 
   function getuserQuestions(id: number) {
     return axiosInstance.get<{ data: Question[] }>(`/questions/${id}`);
+  }
+  function OpenModal() {
+    setIsEditing(!isEditing);
+    setIsOpenModal(true);
   }
   useEffect(() => {
     if (profileData?.id) {
@@ -27,7 +40,7 @@ export default function UserProfilePage() {
   }, [profileData?.id]);
 
   if (isLoading) {
-   return <ProfileSkeleton/>
+    return <ProfileSkeleton />;
   }
 
   if (error) {
@@ -50,12 +63,15 @@ export default function UserProfilePage() {
           {/* Edit Profile Button */}
           <div className="flex justify-end mb-6">
             <button
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => OpenModal()}
               className="text-primary hover:text-blue-700 font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
             >
               <Edit3 className="w-4 h-4" />
               <span>Edit Profile</span>
             </button>
+            {isOpenModal && (
+              <ProfileModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+            )}
           </div>
           {/* Avatar  */}
           <div className="w-24 h-24 mx-auto my-2 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-white shadow-sm flex items-center justify-center">
@@ -90,7 +106,7 @@ export default function UserProfilePage() {
             <h1 className="text-2xl font-bold text-gray-900 capitalize mb-2">
               {profileData?.full_name}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">{profileData?.job ||"No job available"}</p>
+            <p className="text-gray-500 text-sm mb-4">{profileData?.job || "No job available"}</p>
 
             {/* Bio */}
             <p className="text-gray-600 text-sm leading-relaxed max-w-md mx-auto mb-6">
@@ -217,7 +233,6 @@ export default function UserProfilePage() {
   );
 }
 
-
 function ProfileSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -235,6 +250,37 @@ function ProfileSkeleton() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfileModal({
+  isOpenModal,
+  setIsOpenModal,
+}: {
+  isOpenModal: boolean;
+  setIsOpenModal: (isOpenModal: boolean) => void;
+}) {
+  if (!isOpenModal) return null;
+
+  return (
+    <div
+      onClick={() => setIsOpenModal(false)}
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white flex flex-col rounded-lg w-3/4 md:w-1/2 shadow-sm border border-gray-200 p-3"
+      >
+        <div className="flex justify-between my-3 items-center">
+          <h1 className="text-primary font-bold ">Edit Profile</h1>
+          <span className="cursor-pointer" onClick={() => setIsOpenModal(false)}>
+            {" "}
+            <ShieldCloseIcon className="w-6 h-6 text-primary" />{" "}
+          </span>
+        </div>
+        <UserInfoForm onCancel={() => setIsOpenModal(false)} />
       </div>
     </div>
   );

@@ -2,20 +2,17 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/api";
 import { toast } from "react-hot-toast";
-
-type FormData = {
-  content: string;
-};
+import addNewQuestion from "@/api/createQuestion";
+import type { QuestionFormData } from "@/types/backend";
 
 export default function CreateQuestion() {
-  const { register, handleSubmit, reset } = useForm<FormData>();
+  const { register, handleSubmit, reset } = useForm<QuestionFormData>();
   const queryClient = useQueryClient();
 
   const { mutate: createQuestion, isPending } = useMutation({
-    mutationFn: (data: FormData) => {
-      return axiosInstance.post("/questions", data);
+    mutationFn: (data: QuestionFormData) => {
+      return addNewQuestion(data);
     },
     onSuccess: () => {
       // تحديث قائمة الأسئلة تلقائياً
@@ -28,12 +25,12 @@ export default function CreateQuestion() {
     },
   });
 
-  const onSubmit = (data: FormData) => {
-   if(data.content.trim()) {
-    createQuestion(data);
-   } else {
-    toast.error("Question cannot be empty");
-   }
+  const onSubmit = (data: QuestionFormData) => {
+    if (data.content.trim()) {
+      createQuestion(data);
+    } else {
+      toast.error("Question cannot be empty");
+    }
   };
   return (
     <>

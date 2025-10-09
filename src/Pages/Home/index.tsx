@@ -11,10 +11,11 @@ export default function HomePage() {
     return <LoadingLogo />;
   }
 
-  console.log(questions?.data.length);
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <label htmlFor="create-question" className="text-primary font-semibold text-sm">*Create Question* </label>
+      <label htmlFor="create-question" className="text-primary font-semibold text-sm">
+        *Create Question*{" "}
+      </label>
       <CreateQuestion />
       {/* Profile Header Card */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
