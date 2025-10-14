@@ -1,6 +1,8 @@
+import useDeleteQuestion from "@/hooks/useDeleteQuestion";
 import useQuestionVote from "@/hooks/useQuestionVote";
+import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
-import { MessageCircle, MoreVertical, ArrowUp, ArrowDown } from "lucide-react";
+import { MessageCircle, ArrowUp, ArrowDown, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
 //  {
@@ -10,16 +12,23 @@ import toast from "react-hot-toast";
 
 export default function QuestionCard({ question }: { question: Question }) {
   const { mutate: voteMutation } = useQuestionVote();
+  const { mutate: deleteMutation } = useDeleteQuestion();
+  const { data: currentUser } = useProfile();
 
+  // التحقق من أن المستخدم الحالي هو صاحب السؤال
+  const isOwner = currentUser?. username === question.user.username;
   const handleVote = (vote: number) => {
-    voteMutation({ id: question.id, vote }); 
+    voteMutation({ id: question.id, vote });
     if (vote === 1) {
       toast.success("Voted successfully");
     } else if (vote === 2) {
       toast.success("Un voted successfully");
     }
   };
-
+  const handleDelete = () => {
+    deleteMutation(question.id);
+    toast.success("Question deleted successfully");
+  };
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       {/* Question Header */}
@@ -45,10 +54,16 @@ export default function QuestionCard({ question }: { question: Question }) {
           </div>
         </div>
 
-        {/* Options Menu */}
-        <button className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200">
-          <MoreVertical className="w-5 h-5 text-gray-400" />
-        </button>
+        {/* Delete Question - يظهر فقط إذا كان المستخدم هو صاحب السؤال */}
+        {isOwner && (
+          <button
+            onClick={handleDelete}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            title="Delete Question"
+          >
+            <Trash className="w-5 h-5 text-red-500" />
+          </button>
+        )}
       </div>
 
       {/* Question Text */}
@@ -63,7 +78,7 @@ export default function QuestionCard({ question }: { question: Question }) {
         <div className="flex items-center space-x-4">
           {/* Upvotes */}
           <button className="flex items-center space-x-1 text-gray-600 hover:text-green-600 transition-colors duration-200">
-           vote <ArrowUp className="w-4 h-4" onClick={() => handleVote(1)} />
+            vote <ArrowUp className="w-4 h-4" onClick={() => handleVote(1)} />
             <span className="text-sm font-medium">{question.upvotes || 0}</span>
             {question.viewer_vote === "1" && <span className="text-sm font-medium">You voted</span>}
           </button>
