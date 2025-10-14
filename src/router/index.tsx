@@ -12,6 +12,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ErrorFallback from "@/components/ErrorBoundary/ErrorFallback";
 import RootLayout from "@/components/RootLayout";
 import Login from "@/Pages/LoginPage";
+import QuestionDetails from "@/Pages/QuestionDetails/QuestionDetails";
  
 const routes: RouteObject[] = [
   {
@@ -55,6 +56,16 @@ const routes: RouteObject[] = [
             <ProtectedAuthRoutes>
               <SignUp />
             </ProtectedAuthRoutes>
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "/question/:id",
+        element: (
+          <ErrorBoundary fallback={<ErrorFallback />} >
+            <ProtectedRoutes>
+              <QuestionDetails />
+            </ProtectedRoutes>
           </ErrorBoundary>
         ),
       },

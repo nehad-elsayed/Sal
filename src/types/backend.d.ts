@@ -63,3 +63,16 @@ export interface Meta {
 export type QuestionFormData = {
   content: string;
 };
+
+
+export interface Answer {
+  content: string;
+  created_at: string;
+  id: number;
+  question_id: number;
+  user: User;
+  viewer_vote: string | null;
+  downvotes: number;
+  upvotes: number;
+}
+

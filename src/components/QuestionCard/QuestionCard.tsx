@@ -4,6 +4,7 @@ import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
 import { MessageCircle, ArrowUp, ArrowDown, Trash } from "lucide-react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 //  {
 
@@ -14,7 +15,7 @@ export default function QuestionCard({ question }: { question: Question }) {
   const { mutate: voteMutation } = useQuestionVote();
   const { mutate: deleteMutation } = useDeleteQuestion();
   const { data: currentUser } = useProfile();
-
+  const navigate = useNavigate();
   // التحقق من أن المستخدم الحالي هو صاحب السؤال
   const isOwner = currentUser?. username === question.user.username;
   const handleVote = (vote: number) => {
@@ -36,15 +37,15 @@ export default function QuestionCard({ question }: { question: Question }) {
         {/* Asker Info */}
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-            {question.user.avatar ? (
+            {question.user?.avatar ? (
               <img
-                src={question.user.avatar}
+                src={question.user?.avatar}
                 alt={question.user.full_name.charAt(0)}
                 className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500 text-sm font-semibold">
-                {question.user.full_name?.slice(0, 2).toUpperCase()}
+                {question.user?.full_name?.slice(0, 2).toUpperCase()}
               </div>
             )}
           </div>
@@ -91,7 +92,7 @@ export default function QuestionCard({ question }: { question: Question }) {
           </button>
 
           {/* Comments */}
-          <button className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors duration-200">
+          <button onClick={() => navigate(`/question/${question.id}`)} className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors duration-200">
             <MessageCircle className="w-4 h-4" />
             <span className="text-sm font-medium">{question.answers_count || 0}</span>
           </button>
