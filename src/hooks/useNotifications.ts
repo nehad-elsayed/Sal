@@ -16,6 +16,8 @@ export default function useNotifications() {
     queryKey: ["notifications"],
     queryFn: getNotifications,
     select: (data) => data.data,
-    enabled: isAuth,
+      enabled: isAuth,
+      staleTime: 1000 * 60 * 2, // 2 minutes
+      refetchOnWindowFocus: true,
   });
 }

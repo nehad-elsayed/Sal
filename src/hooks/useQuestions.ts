@@ -10,6 +10,8 @@ export default function useQuestions() {
     queryKey: ["questions"],
     queryFn: getAllQuestions,
     select: (data) => data.data,
-    enabled: isAuth,
+    enabled: isAuth, 
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    refetchOnWindowFocus: true,
   });
 }

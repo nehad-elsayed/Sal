@@ -1,67 +1,18 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Github, Mail, Lock } from "lucide-react";
-import useLogin from "@/hooks/useLogin";
-
-
-// fo login on testing const test ={
-//   username: "nehad999",
-//   password: "12345678",
-// }
-
-
-
-// Validation schemas
-const loginSchema = z.object({
-  username: z.string().min(6, "Username must be at least 6 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import LoginForm from "@/components/Forms/LoginForm";
 
 export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
- const {mutate: login,isPending} = useLogin()
 
   // Get current tab from URL, default to 'login'
   const currentTab = searchParams.get("tab") || "login";
 
-  // Form instances
-  const loginForm = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  
-  });
-
-
   const handleTabChange = (tab: string) => {
     setSearchParams({ tab });
   };
-
-  const onLoginSubmit = (values: LoginFormValues) => {
-    login(values);
-  };
-
-
 
   // Handle navigation between login and signup
   const handleSignInClick = () => {
@@ -71,7 +22,6 @@ export default function Login() {
   const handleSignUpClick = () => {
     navigate("/signup?tab=signup");
   };
-
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -86,11 +36,7 @@ export default function Login() {
               </h1>
 
               {/* Tabs */}
-              <Tabs
-                value={currentTab}
-                onValueChange={handleTabChange}
-                className="mb-8"
-              >
+              <Tabs value={currentTab} onValueChange={handleTabChange} className="mb-8">
                 <TabsList className="grid mx-auto grid-cols-2 w-1/2">
                   <TabsTrigger
                     value="login"
@@ -113,89 +59,8 @@ export default function Login() {
                 </TabsList>
 
                 <TabsContent value="login" className="mt-6">
-                  <Form {...loginForm}>
-                    <form
-                      onSubmit={loginForm.handleSubmit(onLoginSubmit as SubmitHandler<LoginFormValues>)}
-                      className="space-y-4"
-                    >
-                      {/* Email */}
-                      <FormField
-                        control={loginForm.control}
-                        name="username"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <FormControl>
-                                <Input
-                                  type="username"
-                                  placeholder="username"
-                                  className="pl-10 h-12 border-gray-200 rounded-full focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Password */}
-                      <FormField
-                        control={loginForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  placeholder="password"
-                                  className="pl-10 h-12 border-gray-200 rounded-full focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Sign In Button */}
-                      <Button
-                        type="submit"
-                        className="w-full h-12 text-base font-medium rounded-full"
-                      >
-                        {isPending ? "Signing in..." : "Sign in"}
-                      </Button>
-
-                      {/* Divider */}
-                      <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-gray-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                          <span className="px-2 bg-blue-50 text-gray-500">
-                            Or
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* GitHub Button */}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full h-12  font-medium bg-black text-white hover:text-white hover:bg-gray-700 rounded-full border-black"
-                      >
-                        <Github className="w-5 h-5 mr-2" />
-                        Sign in with GitHub
-                      </Button>
-                    </form>
-                  </Form>
+                  <LoginForm />
                 </TabsContent>
-
-           
               </Tabs>
             </div>
           </div>
