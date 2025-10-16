@@ -59,6 +59,9 @@ importers:
       react-router-dom:
         specifier: ^7.8.2
         version: 7.8.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      sweetalert2:
+        specifier: 6.6.1
+        version: 6.6.1
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -2197,6 +2200,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  sweetalert2@6.6.1:
+    resolution: {integrity: sha512-qDKxAiQODNxSlB14wjn81u19sowJKcyZK3tAYrMBDN2Eln7WmkyhS10woMUXGSTk2xJKKVi2YWWfA+tIGZnaVw==}
+    engines: {node: '>=0.10.0'}
+
   tailwind-merge@3.3.1:
     resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
 
@@ -4323,6 +4330,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  sweetalert2@6.6.1: {}
 
   tailwind-merge@3.3.1: {}
 

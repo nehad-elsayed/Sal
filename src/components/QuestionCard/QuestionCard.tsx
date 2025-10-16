@@ -5,6 +5,7 @@ import type { Question } from "@/types/backend";
 import { MessageCircle, ArrowUp, ArrowDown, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 
 //  {
 
@@ -16,8 +17,9 @@ export default function QuestionCard({ question }: { question: Question }) {
   const { mutate: deleteMutation } = useDeleteQuestion();
   const { data: currentUser } = useProfile();
   const navigate = useNavigate();
+   const{openModal}=useConfirmationModal();
   // التحقق من أن المستخدم الحالي هو صاحب السؤال
-  const isOwner = currentUser?. username === question.user.username;
+  const isOwner = currentUser?.username === question.user.username;
   const handleVote = (vote: number) => {
     voteMutation({ id: question.id, vote });
     if (vote === 1) {
@@ -27,8 +29,16 @@ export default function QuestionCard({ question }: { question: Question }) {
     }
   };
   const handleDelete = () => {
-    deleteMutation(question.id);
+    openModal({
+      title: "Are you sure?",
+      message: "You won't be able to revert this!",
+      confirmText: "Yes, delete it!",
+      cancelText: "Cancel",
+      onConfirm: () => {
+        deleteMutation(question.id);
     toast.success("Question deleted successfully");
+      },
+    });
   };
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -69,7 +79,7 @@ export default function QuestionCard({ question }: { question: Question }) {
 
       {/* Question Text */}
       <div className="mb-4">
-        <p className="text-gray-900 text-base leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap">
+        <p className="text-gray-900 text-wrap break-words text-base leading-relaxed  ">
           {question.content || "No question available"}
         </p>
       </div>
@@ -92,7 +102,10 @@ export default function QuestionCard({ question }: { question: Question }) {
           </button>
 
           {/* Comments */}
-          <button onClick={() => navigate(`/question/${question.id}`)} className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors duration-200">
+          <button
+            onClick={() => navigate(`/question/${question.id}`)}
+            className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors duration-200"
+          >
             <MessageCircle className="w-4 h-4" />
             <span className="text-sm font-medium">{question.answers_count || 0}</span>
           </button>
