@@ -5,6 +5,14 @@ import useDeleteAnswer from "@/hooks/useDeleteAnswer";
 import useProfile from "@/hooks/useProfile";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 import toast from "react-hot-toast";
+import useAnswerVote from "@/hooks/useAnswerVote";
+
+// "data": {
+//   "downvotes": 0,
+//   "id": 2,
+//   "upvotes": 1,
+//   "viewer_vote": true // true if upvote and false if downvote and null if hasn't voted
+// },
 
 export default function AnswerCard({
   questionId,
@@ -17,7 +25,17 @@ export default function AnswerCard({
   const { mutate: deleteAnswer } = useDeleteAnswer();
   const { data: currentUser } = useProfile();
   const { openModal } = useConfirmationModal();
-
+  const { mutate: voteMutation } = useAnswerVote();
+  const handleVote = (answerId: number, vote: number) => {
+    voteMutation({ id: answerId, vote: vote });
+    if (vote === 1) {
+      toast.success("Voted up successfully");
+    } else if (vote === 2) {
+      toast.success("Voted down successfully");
+    } else if (vote === 0) {
+      toast.success("Removed vote successfully");
+    }
+  };
   const handleDeleteAnswer = (answerId: number) => {
     openModal({
       title: "Are you sure?",
@@ -99,12 +117,12 @@ export default function AnswerCard({
 
               <div className="flex items-center space-x-4">
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-green-600 transition-colors duration-200">
-                  <ArrowUp className="w-4 h-4" />
+                  <ArrowUp className="w-4 h-4" onClick={() => handleVote(answer.id, 1)} />
                   <span className="text-sm font-medium">{answer.upvotes || 0}</span>
                 </button>
 
                 <button className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors duration-200">
-                  <ArrowDown className="w-4 h-4" />
+                  <ArrowDown className="w-4 h-4" onClick={() => handleVote(answer.id, 2)} />
                   <span className="text-sm font-medium">{answer.downvotes || 0}</span>
                 </button>
               </div>

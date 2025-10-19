@@ -2,10 +2,12 @@ import useDeleteQuestion from "@/hooks/useDeleteQuestion";
 import useQuestionVote from "@/hooks/useQuestionVote";
 import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
-import { MessageCircle, ArrowUp, ArrowDown, Trash } from "lucide-react";
+import { MessageCircle, ArrowUp, ArrowDown, Trash, Edit } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
+import { useState } from "react";
+import EditModal from "../EditModal/EditModal";
 
 //  {
 
@@ -14,10 +16,11 @@ import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 
 export default function QuestionCard({ question }: { question: Question }) {
   const { mutate: voteMutation } = useQuestionVote();
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
   const { mutate: deleteMutation } = useDeleteQuestion();
   const { data: currentUser } = useProfile();
   const navigate = useNavigate();
-   const{openModal}=useConfirmationModal();
+  const { openModal } = useConfirmationModal();
   // التحقق من أن المستخدم الحالي هو صاحب السؤال
   const isOwner = currentUser?.username === question.user.username;
   const handleVote = (vote: number) => {
@@ -36,9 +39,12 @@ export default function QuestionCard({ question }: { question: Question }) {
       cancelText: "Cancel",
       onConfirm: () => {
         deleteMutation(question.id);
-    toast.success("Question deleted successfully");
+        toast.success("Question deleted successfully");
       },
     });
+  };
+  const handleEdit = () => {
+    setIsOpenEdit(true);
   };
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -67,15 +73,22 @@ export default function QuestionCard({ question }: { question: Question }) {
 
         {/* Delete Question - يظهر فقط إذا كان المستخدم هو صاحب السؤال */}
         {isOwner && (
-          <button
-            onClick={handleDelete}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
-            title="Delete Question"
-          >
-            <Trash className="w-5 h-5 text-red-500" />
-          </button>
+          <div className="flex items-center space-x-2">
+            <button title="Edit Question">
+              <Edit onClick={handleEdit} className="w-5 h-5 text-blue-500" />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+              title="Delete Question"
+            >
+              <Trash className="w-5 h-5 text-red-500" />
+            </button>
+          </div>
         )}
       </div>
+
+      {isOpenEdit && <EditModal isOpen={isOpenEdit} setIsOpen={setIsOpenEdit} question={question} />}
 
       {/* Question Text */}
       <div className="mb-4">
