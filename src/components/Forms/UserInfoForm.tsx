@@ -32,16 +32,16 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
 
   const { register, handleSubmit, reset } = useForm<UserInfoFormValues>({
     defaultValues: {
-      full_name: profileData?.full_name || "",
-      username: profileData?.username || "",
+      // full_name: profileData?.full_name || "",
+      // username: profileData?.username || "",
       bio: profileData?.bio || "",
       job: profileData?.job || "",
     },
   });
   function onSubmit(data: UserInfoFormValues) {
     updateProfileMutation({
-      full_name: data.full_name,
-      username: data.username,
+      // full_name: data.full_name,
+      // username: data.username,
       bio: data.bio,
       job: data.job,
     });
@@ -52,7 +52,7 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex my-2 flex-col gap-2">
+      {/* <div className="flex my-2 flex-col gap-2">
         <Label>Full Name</Label>
         <Input
           {...register("full_name")}
@@ -67,7 +67,7 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
           className="border-primary  rounded-full outline-none focus:outline-none focus:ring-0"
           type="text"
         />
-      </div>
+      </div> */}
       <div className="flex my-2 flex-col gap-2">
         <Label>Job</Label>
         <Input

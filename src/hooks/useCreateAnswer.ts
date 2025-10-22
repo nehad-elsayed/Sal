@@ -1,11 +1,16 @@
 import createAnswer from "@/api/createAnswer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import useProfile from "./useProfile";
 
 export default function useCreateAnswer() {
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
   const questionId = parseInt(id || "0");
+  const { data: profileData } = useProfile(); //& bn3rf byanat eluser 3shan n3rf ay profile hyt3mlo update
+  if (profileData?.username) {
+    queryClient.invalidateQueries({ queryKey: ["userQuestions", profileData.username] });
+  }
   return useMutation({
     mutationFn: (data: { content: string; question_id: number }) => createAnswer(data),
     onSuccess: () => {

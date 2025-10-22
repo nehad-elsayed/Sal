@@ -16,8 +16,7 @@ export default function UserProfilePage() {
     data: questions,
     isLoading: questionsLoading,
     error: questionsError,
-    } = useUserQuestions(profileData?.username || "");
-    console.log("questions", questions);  
+  } = useUserQuestions(profileData?.username || "");
   function OpenModal() {
     setIsEditing(!isEditing);
     setIsOpenModal(true);
