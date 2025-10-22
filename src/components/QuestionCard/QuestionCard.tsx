@@ -100,7 +100,7 @@ export default function QuestionCard({ question }: { question: Question }) {
       </div>
 
       {/* Interaction Metrics */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center flex-wrap  justify-between">
         <div className="flex items-center space-x-4">
           {/* Upvotes */}
           <button className="flex items-center space-x-1 text-gray-600 hover:text-green-600 transition-colors duration-200">
@@ -128,7 +128,7 @@ export default function QuestionCard({ question }: { question: Question }) {
         </div>
 
         {/* Timestamp */}
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 mt-2 md:mt-0  text-sm">
           {question.created_at ? new Date(question.created_at).toLocaleDateString() : "Recently"}
         </p>
       </div>
