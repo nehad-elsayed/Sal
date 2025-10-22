@@ -88,7 +88,9 @@ export default function QuestionCard({ question }: { question: Question }) {
         )}
       </div>
 
-      {isOpenEdit && <EditModal isOpen={isOpenEdit} setIsOpen={setIsOpenEdit} question={question} />}
+      {isOpenEdit && (
+        <EditModal isOpen={isOpenEdit} setIsOpen={setIsOpenEdit} question={question} />
+      )}
 
       {/* Question Text */}
       <div className="mb-4">
@@ -118,6 +120,7 @@ export default function QuestionCard({ question }: { question: Question }) {
           <button
             onClick={() => navigate(`/question/${question.id}`)}
             className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors duration-200"
+            title="View Answers"
           >
             <MessageCircle className="w-4 h-4" />
             <span className="text-sm font-medium">{question.answers_count || 0}</span>

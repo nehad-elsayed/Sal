@@ -1,5 +1,5 @@
 import type { Answer, Question } from "@/types/backend";
-import { MessageCircle, ArrowUp, ArrowDown, User as UserIcon, Trash } from "lucide-react";
+import { MessageCircle, ArrowUp, ArrowDown, User as UserIcon, Trash, Edit } from "lucide-react";
 import useGetAnswers from "@/hooks/useGetAnswers";
 import useDeleteAnswer from "@/hooks/useDeleteAnswer";
 import useProfile from "@/hooks/useProfile";
@@ -17,9 +17,13 @@ import useAnswerVote from "@/hooks/useAnswerVote";
 export default function AnswerCard({
   questionId,
   question,
+  setIsEditAnswer,
+  setEditingAnswer,
 }: {
   questionId: number;
   question: Question;
+  setIsEditAnswer: (isEditAnswer: boolean) => void;
+  setEditingAnswer: (answer: Answer | null) => void;
 }) {
   const { data: answers, isLoading: answersLoading } = useGetAnswers(questionId);
   const { mutate: deleteAnswer } = useDeleteAnswer();
@@ -35,6 +39,10 @@ export default function AnswerCard({
     } else if (vote === 0) {
       toast.success("Removed vote successfully");
     }
+  };
+  const handleEditAnswer = (answer: Answer) => {
+    setEditingAnswer(answer);
+    setIsEditAnswer(true);
   };
   const handleDeleteAnswer = (answerId: number) => {
     openModal({
@@ -76,12 +84,16 @@ export default function AnswerCard({
               key={answer.id}
               className="bg-white rounded-lg  shadow-sm border border-gray-200 p-6"
             >
-              <div className="flex items-start justify-between mb-4 relative">
+              <div className="flex items-center justify-between mb-4 relative ">
+                <Edit
+                  onClick={() => handleEditAnswer(answer)}
+                  className="cursor-pointer text-blue-500 absolute top-1 right-7 size-4 hover:text-blue-700 transition-colors duration-200"
+                />
+
                 {canDeleteAnswer(answer) && (
                   <Trash
                     onClick={() => handleDeleteAnswer(answer.id)}
-                    className="absolute cursor-pointer text-red-500 size-4 top-1 right-0 hover:text-red-700 transition-colors duration-200"
-                  />
+                    className="absolute cursor-pointer text-red-500 size-4 top-1 right-0 hover:text-red-700 transition-colors duration-200"/>
                 )}
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">

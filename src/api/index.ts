@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
       // إعادة توجيه إلى صفحة تسجيل الدخول أو إعادة تحميل الصفحة
       window.location.href = "/login";
     }
-    return Promise.reject(error);
+    // return Promise.reject(error);
   }
 );
 // axiosInstance.interceptors.request.use((response)=>response.data); // السطر ده عشان احدد الداتا اللي راجعه م الباك اند عشان مثلا لو مش مستخدمه يوز كويري وعامله سيليكت م الريسبونس

@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  Edit3,
-  ThumbsUp,
-  ThumbsDown,
-  MessageCircle,
-  MoreVertical,
-  ShieldCloseIcon,
-} from "lucide-react";
+import { Edit3, ThumbsUp, ThumbsDown, MessageCircle, MoreVertical } from "lucide-react";
 import useProfile from "@/hooks/useProfile";
 import type { Question } from "@/types/backend";
 import axiosInstance from "@/api";
-import UserInfoForm from "@/components/Forms/UserInfoForm";
+import {
+  ProfileModal,
+  ProfileSkeleton,
+} from "@/components/ProfileModalAttachments/ProfileModalAttachments";
 
 export default function UserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -228,59 +224,6 @@ export default function UserProfilePage() {
             <div className="text-center text-gray-500 text-sm font-bold">No questions yet</div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfileSkeleton() {
-  return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <div className="animate-pulse">
-            <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
-            </div>
-            <div className="text-center">
-              <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-2"></div>
-              <div className="h-6 bg-gray-300 rounded w-48 mx-auto mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded w-40 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-300 rounded w-64 mx-auto"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfileModal({
-  isOpenModal,
-  setIsOpenModal,
-}: {
-  isOpenModal: boolean;
-  setIsOpenModal: (isOpenModal: boolean) => void;
-}) {
-  if (!isOpenModal) return null;
-
-  return (
-    <div
-      onClick={() => setIsOpenModal(false)}
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-white flex flex-col rounded-lg w-3/4 md:w-1/2 shadow-sm border border-gray-200 p-3"
-      >
-        <div className="flex justify-between my-3 items-center">
-          <h1 className="text-primary font-bold ">Edit Profile</h1>
-          <span className="cursor-pointer" onClick={() => setIsOpenModal(false)}>
-            {" "}
-            <ShieldCloseIcon className="w-6 h-6 text-primary" />{" "}
-          </span>
-        </div>
-        <UserInfoForm onCancel={() => setIsOpenModal(false)} />
       </div>
     </div>
   );
