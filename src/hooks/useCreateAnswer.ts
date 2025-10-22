@@ -2,6 +2,7 @@ import createAnswer from "@/api/createAnswer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import useProfile from "./useProfile";
+import toast from "react-hot-toast";
 
 export default function useCreateAnswer() {
   const queryClient = useQueryClient();
@@ -14,6 +15,7 @@ export default function useCreateAnswer() {
   return useMutation({
     mutationFn: (data: { content: string; question_id: number }) => createAnswer(data),
     onSuccess: () => {
+      toast.success("Answer created successfully");
       // تحديث cache الإجابات
       queryClient.invalidateQueries({ queryKey: ["answers", questionId] });
       // تحديث cache السؤال ليتحدث عدد الإجابات
