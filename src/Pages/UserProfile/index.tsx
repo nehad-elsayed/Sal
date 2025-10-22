@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Edit3, ThumbsUp, ThumbsDown, MessageCircle, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { Edit3 } from "lucide-react";
 import useProfile from "@/hooks/useProfile";
-import type { Question } from "@/types/backend";
-import axiosInstance from "@/api";
+import useUserQuestions from "@/hooks/useUserQuestions";
+import QuestionCard from "@/components/QuestionCard/QuestionCard";
 import {
   ProfileModal,
   ProfileSkeleton,
@@ -12,28 +12,16 @@ export default function UserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { data: profileData, isLoading, error } = useProfile();
-  const [questions, setQuestions] = useState<Question[]>([]);
-
-  function getuserQuestions(id: number) {
-    return axiosInstance.get<{ data: Question[] }>(`/questions/${id}`);
-  }
+  const {
+    data: questions,
+    isLoading: questionsLoading,
+    error: questionsError,
+    } = useUserQuestions(profileData?.username || "");
+    console.log("questions", questions);  
   function OpenModal() {
     setIsEditing(!isEditing);
     setIsOpenModal(true);
   }
-  useEffect(() => {
-    if (profileData?.id) {
-      getuserQuestions(profileData.id)
-        .then((res) => {
-          console.log(res.data.data);
-          setQuestions(res.data.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user questions:", error);
-          // لا تعرض رسالة خطأ هنا لأن interceptor سيتعامل مع 401
-        });
-    }
-  }, [profileData?.id]);
 
   if (isLoading) {
     return <ProfileSkeleton />;
@@ -112,9 +100,7 @@ export default function UserProfilePage() {
             {/* User Statistics */}
             <div className="flex justify-center space-x-8">
               <div className="text-center">
-                <p className="text-2xl font-bold text-primary">
-                  {profileData?.questions_count || questions.length}
-                </p>
+                <p className="text-2xl font-bold text-primary">{questions?.length || 0}</p>
                 <p className="text-gray-500 text-sm">Questions</p>
               </div>
               <div className="text-center">
@@ -128,100 +114,45 @@ export default function UserProfilePage() {
         {/* Questions Section */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-primary mb-4">
-            Questions ({profileData?.questions_count || questions.length})
+            Questions ({questions?.length || 0})
           </h2>
 
           {/* Questions List */}
-          {questions.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
-              {questions.map((question: Question) => (
-                <div
-                  key={question.id}
-                  className="bg-white rounded-xl shadow-md border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group"
-                >
-                  {/* Question Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    {/* Asker Info */}
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-white shadow-sm">
-                        <img
-                          src={question.user.avatar}
-                          alt={question.user.full_name.charAt(0)}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="w-full capitalize h-full bg-gradient-to-br from-blue-400 to-purple-400 items-center justify-center text-white text-sm font-semibold hidden">
-                          {question.user.full_name?.charAt(0)}
-                        </div>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm capitalize">
-                          {question.user.full_name}
-                        </p>
-                        <p className="text-gray-500 text-xs capitalize">
-                          {question.user.job ? question.user.job : null}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Options Menu */}
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 opacity-0 group-hover:opacity-100">
-                      <MoreVertical className="w-4 h-4 text-gray-400" />
-                    </button>
-                  </div>
-
-                  {/* Question Text */}
-                  <div className="mb-6">
-                    <p className="text-gray-900 text-base leading-relaxed font-medium">
-                      {question.content || "No question available"}
-                    </p>
-                  </div>
-
-                  {/* Interaction Metrics */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-6">
-                      {/* Upvotes */}
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors duration-200 group/btn">
-                        <div className="p-1 rounded-full group-hover/btn:bg-green-50">
-                          <ThumbsUp className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm font-medium">{question.upvotes || 0}</span>
-                      </button>
-
-                      {/* Downvotes */}
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors duration-200 group/btn">
-                        <div className="p-1 rounded-full group-hover/btn:bg-red-50">
-                          <ThumbsDown className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm font-medium">{question.downvotes || 0}</span>
-                      </button>
-
-                      {/* Comments */}
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-primary transition-colors duration-200 group/btn">
-                        <div className="p-1 rounded-full group-hover/btn:bg-blue-50">
-                          <MessageCircle className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm font-medium">{question.answers_count || 0}</span>
-                      </button>
-                    </div>
-
-                    {/* Timestamp */}
-                    <div className="text-right">
-                      <p className="text-gray-500 text-sm">
-                        {question.created_at
-                          ? new Date(question.created_at).toLocaleDateString("ar-EG", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })
-                          : "Recently"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+          {questionsLoading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading questions...</p>
+            </div>
+          ) : questionsError ? (
+            <div className="text-center py-8">
+              <p className="text-red-600">Error loading questions</p>
+            </div>
+          ) : questions && questions.length > 0 ? (
+            <div className="space-y-6">
+              {questions.map((question) => (
+                <QuestionCard key={question.id} question={question} />
               ))}
             </div>
           ) : (
-            <div className="text-center text-gray-500 text-sm font-bold">No questions yet</div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+              <div className="text-gray-400 mb-4">
+                <svg
+                  className="w-16 h-16 mx-auto"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No questions yet</h3>
+              <p className="text-gray-600">This user hasn't asked any questions yet.</p>
+            </div>
           )}
         </div>
       </div>

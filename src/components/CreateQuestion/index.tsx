@@ -1,33 +1,18 @@
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import addNewQuestion from "@/api/createQuestion";
 import type { QuestionFormData } from "@/types/backend";
+import useCreateQuestion from "@/hooks/useCreateQuestion";
 
 export default function CreateQuestion() {
   const { register, handleSubmit, reset } = useForm<QuestionFormData>();
-  const queryClient = useQueryClient();
-
-  const { mutate: createQuestion, isPending } = useMutation({
-    mutationFn: (data: QuestionFormData) => {
-      return addNewQuestion(data);
-    },
-    onSuccess: () => {
-      // تحديث قائمة الأسئلة تلقائياً
-      queryClient.invalidateQueries({ queryKey: ["questions"] });
-      toast.success("Question created successfully!");
-      reset(); // مسح النموذج
-    },
-    onError: () => {
-      toast.error("Failed to create question");
-    },
-  });
-
+  const { mutate: createQuestion, isPending } = useCreateQuestion();
   const onSubmit = (data: QuestionFormData) => {
     if (data.content.trim()) {
       createQuestion(data);
+      toast.success("Question created successfully!");
+      reset();
     } else {
       toast.error("Question cannot be empty");
     }
