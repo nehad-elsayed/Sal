@@ -66,6 +66,13 @@ export default function AnswerCard({
       currentUser.username === answer.user.username
     );
   };
+
+  // التحقق من إمكانية تعديل الإجابة
+  const canEditAnswer = (answer: Answer) => {
+    if (!currentUser) return false;
+    // يمكن تعديل الإجابة فقط إذا كان المستخدم صاحب الإجابة
+    return currentUser.username === answer.user.username;
+  };
   return (
     <>
       <div className="space-y-4 ">
@@ -85,15 +92,18 @@ export default function AnswerCard({
               className="bg-white rounded-lg  shadow-sm border border-gray-200 p-6"
             >
               <div className="flex items-center justify-between mb-4 relative ">
-                <Edit
-                  onClick={() => handleEditAnswer(answer)}
-                  className="cursor-pointer text-blue-500 absolute top-1 right-7 size-4 hover:text-blue-700 transition-colors duration-200"
-                />
+                {canEditAnswer(answer) && (
+                  <Edit
+                    onClick={() => handleEditAnswer(answer)}
+                    className="cursor-pointer text-blue-500 absolute top-1 right-7 size-4 hover:text-blue-700 transition-colors duration-200"
+                  />
+                )}
 
                 {canDeleteAnswer(answer) && (
                   <Trash
                     onClick={() => handleDeleteAnswer(answer.id)}
-                    className="absolute cursor-pointer text-red-500 size-4 top-1 right-0 hover:text-red-700 transition-colors duration-200"/>
+                    className="absolute cursor-pointer text-red-500 size-4 top-1 right-0 hover:text-red-700 transition-colors duration-200"
+                  />
                 )}
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
