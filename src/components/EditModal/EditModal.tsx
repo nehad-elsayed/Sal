@@ -32,7 +32,7 @@ export default function EditModal({
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input {...register("content")} type="text" placeholder="Question" />
             <div className="flex justify-end gap-2 w-fit ms-auto">
-              <Button type="submit">
+              <Button type="submit" className="text-white bg-primary hover:text-[hsl(var(--primary-foreground))] hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 Update Question
               </Button>
               <Button type="button" variant="destructive" onClick={() => setIsOpen(false)}>

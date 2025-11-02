@@ -75,7 +75,7 @@ export default function QuestionCard({ question }: { question: Question }) {
         {isOwner && (
           <div className="flex items-center space-x-2">
             <button title="Edit Question">
-              <Edit onClick={handleEdit} className="w-5 h-5 text-blue-500" />
+              <Edit onClick={handleEdit} className="w-5 h-5 text-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] transition-colors duration-200" />
             </button>
             <button
               onClick={handleDelete}

@@ -47,7 +47,7 @@ export default function UserProfilePage() {
           <div className="flex justify-end mb-6">
             <button
               onClick={() => OpenModal()}
-              className="text-primary hover:text-blue-700 font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
+              className="text-primary hover:text-[hsl(var(--primary-foreground))] font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
             >
               <Edit3 className="w-4 h-4" />
               <span>Edit Profile</span>

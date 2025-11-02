@@ -84,7 +84,7 @@ export default function Navbar() {
               <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
                 <button
                   onClick={() => navigate("/")}
-                  className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200"
+                  className="p-2 text-white hover:bg-[hsl(var(--primary-foreground))] hover:text-white rounded-lg transition-colors duration-200"
                   title="Home"
                 >
                   <Home className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -92,7 +92,7 @@ export default function Navbar() {
 
                 <div className="relative" ref={notificationsRef}>
                   <button
-                    className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200 relative"
+                    className="p-2 text-white hover:bg-[hsl(var(--primary-foreground))] hover:text-white rounded-lg transition-colors duration-200 relative"
                     title="Notifications"
                     onClick={toggleNotifications}
                   >
@@ -160,7 +160,7 @@ export default function Navbar() {
                 </div>
 
                 <button
-                  className="p-2 text-white hover:bg-blue-500 rounded-lg transition-colors duration-200"
+                  className="p-2 text-white hover:bg-[hsl(var(--primary-foreground))] hover:text-white rounded-lg transition-colors duration-200"
                   title="open app on github"
                 >
                   <HelpCircle
@@ -176,9 +176,9 @@ export default function Navbar() {
                   {/* User Avatar with Dropdown Toggle */}
                   <button
                     onClick={toggleDropdown}
-                    className="flex items-center space-x-2 p-1 rounded-lg hover:bg-blue-500 transition-colors duration-200"
+                    className="flex items-center space-x-2 p-1 rounded-lg hover:bg-[hsl(var(--primary-foreground))] hover:text-white transition-colors duration-200"
                   >
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center overflow-hidden">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-400 to-blue-500 hover:bg-[hsl(var(--primary))] hover:text-white transition-colors duration-200 rounded-full flex items-center justify-center overflow-hidden">
                       {profileData?.avatar ? (
                         <img
                           src={profileData.avatar}

@@ -124,7 +124,7 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
-              className="text-sm border-primary text-primary hover:bg-primary hover:text-white rounded-full"
+              className="text-sm border-primary text-primary hover:bg-primary/10 hover:text-[hsl(var(--primary-foreground))] rounded-full"
             >
               Choose Photo
             </Button>
@@ -133,7 +133,7 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
                 type="button"
                 onClick={handleUploadPhoto}
                 disabled={isUploadingPhoto}
-                className="text-sm bg-primary text-white hover:bg-blue-700 rounded-full"
+                className="text-sm bg-primary  text-white hover:text-[hsl(var(--primary-foreground))] rounded-full"
               >
                 {isUploadingPhoto ? "Uploading..." : "Upload"}
               </Button>
@@ -176,7 +176,7 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
       <div className="flex justify-end p-2 gap-2">
         <Button
           type="submit"
-          className="bg-primary my-2 text-white self-end mt-2 rounded-full"
+          className="bg-primary my-2 text-white hover:text-[hsl(var(--primary-foreground))] self-end mt-2 rounded-full"
           disabled={isPending}
         >
           {isPending ? "Saving..." : "Save Changes"}

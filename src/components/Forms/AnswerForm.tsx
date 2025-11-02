@@ -98,7 +98,7 @@ export default function AnswerForm({
               <button
                 type="submit"
                 disabled={!content?.trim() || isSubmitting}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                className="px-6 py-2 bg-primary text-white hover:text-[hsl(var(--primary-foreground))] rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 {isSubmitting
                   ? isEditAnswer

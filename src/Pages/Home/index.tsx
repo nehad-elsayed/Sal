@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="flex justify-end mb-6">
           <button
             onClick={() => navigate("/profile")}
-            className="text-primary hover:text-blue-700 font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
+            className="text-primary hover:text-[hsl(var(--primary-foreground))] font-medium text-sm flex items-center space-x-1 transition-colors duration-200"
           >
             <User className="w-4 h-4" />
             <span>go to Profile</span>

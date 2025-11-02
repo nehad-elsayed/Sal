@@ -95,7 +95,7 @@ export default function AnswerCard({
                 {canEditAnswer(answer) && (
                   <Edit
                     onClick={() => handleEditAnswer(answer)}
-                    className="cursor-pointer text-blue-500 absolute top-1 right-7 size-4 hover:text-blue-700 transition-colors duration-200"
+                    className="cursor-pointer text-[hsl(var(--primary))] absolute top-1 right-7 size-4 hover:text-blue-700 transition-colors duration-200"
                   />
                 )}
 

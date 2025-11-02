@@ -31,7 +31,7 @@ export default function CreateQuestion() {
             placeholder="Create Question"
             className="text-neutral-700 font-semibold w-full min-h-20 caret-primary outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
-          <Button type="submit" className="ms-auto w-fit" disabled={isPending}>
+          <Button type="submit" className="ms-auto w-fit text-white bg-primary hover:text-[hsl(var(--primary-foreground))] hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" disabled={isPending}>
             {isPending ? "Creating..." : "Create Question"}
           </Button>
         </form>
