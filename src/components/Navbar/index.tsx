@@ -63,7 +63,7 @@ export default function Navbar() {
         {/* Search Bar - Hidden on mobile, visible on larger screens */}
         {isAuth && (
           <>
-            <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
+            {/* <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
               <form onSubmit={handleSearch} className="relative w-full">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
@@ -76,7 +76,7 @@ export default function Navbar() {
                   />
                 </div>
               </form>
-            </div>
+            </div> */}
 
             {/* Navigation Icons and User Section */}
             <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-6">
