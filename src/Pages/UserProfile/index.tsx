@@ -60,7 +60,8 @@ export default function UserProfilePage() {
           <div className="w-24 h-24 mx-auto my-2 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-white shadow-sm flex items-center justify-center">
             {profileData?.avatar ? (
               <img
-                src={profileData.avatar}
+                key={profileData.avatar}
+                src={`${profileData.avatar}?t=${Date.now()}`}
                 alt={profileData.full_name.charAt(0)}
                 className="w-full h-full object-cover"
                 onError={(e) => {

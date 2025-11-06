@@ -181,7 +181,8 @@ export default function Navbar() {
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-400 to-blue-500 hover:bg-[hsl(var(--primary))] hover:text-white transition-colors duration-200 rounded-full flex items-center justify-center overflow-hidden">
                       {profileData?.avatar ? (
                         <img
-                          src={profileData.avatar}
+                          key={profileData.avatar}
+                          src={`${profileData.avatar}?t=${Date.now()}`}
                           alt={profileData?.full_name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
