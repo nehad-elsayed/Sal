@@ -6,8 +6,8 @@ import useProfile from "@/hooks/useProfile";
 import toast from "react-hot-toast";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import updateProfile from "@/api/updateProfile";
-import useAddUserPhoto from "@/hooks/useAddUserPhoto";
-import { useRef, useState, useEffect } from "react";
+// import useAddUserPhoto from "@/hooks/useAddUserPhoto";
+import { useRef } from "react";
 
 type UserInfoFormValues = {
   full_name: string;
@@ -20,8 +20,8 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
   const { data: profileData, refetch: refetchProfile } = useProfile();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   // const { mutate: uploadPhoto, isPending: isUploadingPhoto } = useAddUserPhoto();
   const { mutate: updateProfileMutation, isPending } = useMutation({
@@ -49,24 +49,24 @@ export default function UserInfoForm({ onCancel }: { onCancel: () => void }) {
   });
 
   // Update form values when profileData changes
-  useEffect(() => {
-    if (profileData) {
-      reset({
-        // full_name: profileData.full_name || "",
-        // username: profileData.username || "",
-        bio: profileData.bio || "",
-        job: profileData.job || "",
-      });
-    }
-  }, [profileData, reset]);
+  // useEffect(() => {
+  //   if (profileData) {
+  //     reset({
+  //       // full_name: profileData.full_name || "",
+  //       // username: profileData.username || "",
+  //       bio: profileData.bio || "",
+  //       job: profileData.job || "",
+  //     });
+  //   }
+  // }, [profileData, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
+      // setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
+        // setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
