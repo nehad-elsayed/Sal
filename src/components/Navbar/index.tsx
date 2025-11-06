@@ -1,7 +1,7 @@
 import { AuthContext } from "../Contexts/AuthContext";
 import { useContext, useState, useRef, useEffect } from "react";
 import {  useNavigate } from "react-router-dom";
-import { Search, Home, Bell, HelpCircle, User, LogOut, ChevronDown } from "lucide-react";
+import {  Home, Bell, HelpCircle, User, LogOut, ChevronDown } from "lucide-react";
 // import defaultAvatarImg from "../../assets/images/avatar.avif";
 import useLogout from "@/hooks/useLogout";
 import useNotifications from "@/hooks/useNotifications";
@@ -10,7 +10,7 @@ import useProfile from "@/hooks/useProfile";
 export default function Navbar() {
   const { isAuth } = useContext(AuthContext) as { isAuth: boolean };
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -18,11 +18,11 @@ export default function Navbar() {
   const { data: profileData } = useProfile();
   const { mutate: logoutData } = useLogout();
   const { data: notificationsData } = useNotifications();
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Add search functionality here
-    console.log("Searching for:", searchQuery);
-  };
+  // const handleSearch = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // Add search functionality here
+  //   console.log("Searching for:", searchQuery);
+  // };
 
   // Close dropdown when clicking outside
   useEffect(() => {
