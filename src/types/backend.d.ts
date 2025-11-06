@@ -47,10 +47,14 @@ export interface Question{
  
 }
 export interface Notifications {
-  data: string[]
-  meta: Meta
-  success: boolean
-  unread_count: number
+  content: string
+  created_at: string
+  id: number
+  is_read: boolean
+  url: string
+  meta?: Meta
+  success?: boolean
+  unread_count?: number
 }
 
 export interface Meta {

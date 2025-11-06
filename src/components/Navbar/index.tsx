@@ -1,6 +1,6 @@
 import { AuthContext } from "../Contexts/AuthContext";
 import { useContext, useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { Search, Home, Bell, HelpCircle, User, LogOut, ChevronDown } from "lucide-react";
 // import defaultAvatarImg from "../../assets/images/avatar.avif";
 import useLogout from "@/hooks/useLogout";
@@ -17,7 +17,7 @@ export default function Navbar() {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const { data: profileData } = useProfile();
   const { mutate: logoutData } = useLogout();
-  const { data: notifications } = useNotifications();
+  const { data: notificationsData } = useNotifications();
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // Add search functionality here
@@ -63,20 +63,7 @@ export default function Navbar() {
         {/* Search Bar - Hidden on mobile, visible on larger screens */}
         {isAuth && (
           <>
-            {/* <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
-              <form onSubmit={handleSearch} className="relative w-full">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 sm:py-3  text-white placeholder-gray-600 rounded-lg border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent text-sm sm:text-base"
-                  />
-                </div>
-              </form>
-            </div> */}
+       {/* search bar */}
 
             {/* Navigation Icons and User Section */}
             <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-6">
@@ -99,7 +86,7 @@ export default function Navbar() {
                     <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
                     {/* Notification badge */}
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center ">
-                      {notifications?.length || 0}
+                      {notificationsData?.data?.length || 0}
                     </span>
                   </button>
 
@@ -112,14 +99,14 @@ export default function Navbar() {
                         </h3>
                       </div>
                       <div className="py-2">
-                        {notifications && notifications.length > 0 ? (
-                          notifications.map(
+                        {notificationsData && notificationsData.data.length > 0 ? (
+                          notificationsData.data.map(
                             (notification: {
-                              id: string;
-                              title?: string;
-                              message?: string;
-                              body?: string;
+                              id: number;
+                              content?: string;
                               created_at?: string;
+                              is_read?: boolean;
+                              url?: string;
                             }) => (
                               <div
                                 key={notification.id}
@@ -131,18 +118,14 @@ export default function Navbar() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
-                                      {notification.title || "New Notification"}
+                                      {notification.content || "New Notification"}
                                     </p>
                                     <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
-                                      {notification.message ||
-                                        notification.body ||
-                                        "You have a new notification"}
+                                      {notification.created_at || "You have a new notification"}
                                     </p>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                      {notification.created_at
-                                        ? new Date(notification.created_at).toLocaleDateString()
-                                        : "Just now"}
-                                    </p>
+                                  {/* <Link to={notification.url || ""} className="text-blue-500 hover:text-blue-600">go to question</Link>  
+                                    <span className={`${notification.is_read ? "text-green-500" : "text-red-500"}`}> {notification.is_read ? "Read" : "Unread"} </span>
+                                     */}
                                   </div>
                                 </div>
                               </div>
@@ -256,7 +239,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Search Bar - Visible only on mobile */}
-      <div className="md:hidden mt-4">
+      {/* <div className="md:hidden mt-4">
         <form onSubmit={handleSearch} className="relative">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-300 w-5 h-5" />
@@ -269,7 +252,7 @@ export default function Navbar() {
             />
           </div>
         </form>
-      </div>
+      </div> */}
     </nav>
   );
 }
