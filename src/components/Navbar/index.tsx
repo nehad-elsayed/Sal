@@ -1,11 +1,13 @@
 import { AuthContext } from "../Contexts/AuthContext";
 import { useContext, useState, useRef, useEffect } from "react";
-import {  useNavigate } from "react-router-dom";
-import {  Home, Bell, HelpCircle, User, LogOut, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Home, Bell, HelpCircle, User, LogOut, ChevronDown } from "lucide-react";
 // import defaultAvatarImg from "../../assets/images/avatar.avif";
 import useLogout from "@/hooks/useLogout";
 import useNotifications from "@/hooks/useNotifications";
 import useProfile from "@/hooks/useProfile";
+import useMarkNotificationAsRead from "@/hooks/useMarkNotificationAsRead";
+import type { Notifications } from "@/types/backend";
 
 export default function Navbar() {
   const { isAuth } = useContext(AuthContext) as { isAuth: boolean };
@@ -18,6 +20,7 @@ export default function Navbar() {
   const { data: profileData } = useProfile();
   const { mutate: logoutData } = useLogout();
   const { data: notificationsData } = useNotifications();
+  const { mutate: markAsRead } = useMarkNotificationAsRead();
   // const handleSearch = (e: React.FormEvent) => {
   //   e.preventDefault();
   //   // Add search functionality here
@@ -48,6 +51,34 @@ export default function Navbar() {
   const toggleNotifications = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
   };
+  function checkNotificationDetails(notification: Notifications) {
+    // mark notification as read if it's not already read
+    if (!notification.is_read) {
+      markAsRead(notification.id);
+    }
+
+    // extract question id from url
+    const url = notification.url || "";
+    // handle different url formats: /question/123, /api/question/123, or just 123
+    let questionId = "";
+    if (url.includes("/question/")) {
+      questionId = url.split("/question/")[1]?.split("/")[0] || "";
+    } else if (url.includes("/api/question/")) {
+      questionId = url.split("/api/question/")[1]?.split("/")[0] || "";
+    } else if (/^\d+$/.test(url)) {
+      // if url is just a question id
+      questionId = url;
+    } else {
+      // try to extract question id number from the URL
+      const match = url.match(/\/(\d+)/);
+      questionId = match ? match[1] : "";
+    }
+
+    if (questionId) {
+      navigate(`/question/${questionId}`);
+      setIsNotificationsOpen(false);
+    }
+  }
 
   return (
     <nav className="bg-primary px-4 sm:px-6 py-4 shadow-lg">
@@ -63,7 +94,7 @@ export default function Navbar() {
         {/* Search Bar - Hidden on mobile, visible on larger screens */}
         {isAuth && (
           <>
-       {/* search bar */}
+            {/* search bar */}
 
             {/* Navigation Icons and User Section */}
             <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-6">
@@ -123,9 +154,22 @@ export default function Navbar() {
                                     <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
                                       {notification.created_at || "You have a new notification"}
                                     </p>
-                                  {/* <Link to={notification.url || ""} className="text-blue-500 hover:text-blue-600">go to question</Link>  
-                                    <span className={`${notification.is_read ? "text-green-500" : "text-red-500"}`}> {notification.is_read ? "Read" : "Unread"} </span>
-                                     */}
+                                    <button
+                                      onClick={() =>
+                                        checkNotificationDetails(notification as Notifications)
+                                      }
+                                      className="text-blue-500 hover:text-blue-600 underline text-xs sm:text-sm mt-1"
+                                    >
+                                      go to question
+                                    </button>
+                                    <span
+                                      className={`${
+                                        notification.is_read ? "text-green-500" : "text-red-500"
+                                      } text-xs sm:text-sm`}
+                                    >
+                                      {" "}
+                                      {notification.is_read ? "Read" : "Unread"}{" "}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
